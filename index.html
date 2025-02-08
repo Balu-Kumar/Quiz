@@ -5,182 +5,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: lightblue;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/3/38/India_Map.png') no-repeat center center/cover;
-            position: relative;
         }
-        
-        /* Overlay for better readability */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.7);
-            z-index: 1;
-        }
-        
         .quiz-container {
             background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 350px;
-            position: relative;
-            z-index: 2;
+            width: 300px;
         }
-        
         .question {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 10px;
         }
-        
-        .options div {
-            text-align: left;
-            margin: 8px 0;
-        }
-        
         .options input {
-            margin-right: 10px;
+            margin: 10px 0;
         }
-        
         button {
-            padding: 12px 20px;
-            background-color: #007BFF;
+            padding: 10px 20px;
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-            transition: 0.3s;
         }
-        
         button:hover {
-            background-color: #0056b3;
+            background-color: #45a049;
         }
-        
         #thank-you {
             display: none;
             font-size: 24px;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container" id="name-input">
+
+<div class="quiz-container">
+    <div id="name-input">
         <h2>Enter your name:</h2>
-        <input type="text" id="name" placeholder="Your Name">
+        <input type="text" id="name" placeholder="Your Name" />
         <button onclick="startQuiz()">Start Quiz</button>
     </div>
-    
-    <div class="quiz-container" id="quiz" style="display:none;">
+    <div id="quiz" style="display:none;">
         <h2 class="question"></h2>
         <div class="options"></div>
         <button onclick="nextQuestion()">Next Question</button>
     </div>
-    
-    <div class="quiz-container" id="thank-you">
+    <div id="thank-you">
         <h2>Thank you, <span id="username"></span>!</h2>
         <p>Your participation was appreciated!</p>
     </div>
+</div>
 
-    <script>
-        let questions = [
-            {
-                question: "Rate your friendship on a scale of 1-10",
-                options: [
-                    "Option A: 5",
-                    "Option B: 7",
-                    "Option C: 10",
-                    "Option D: Can't rate friendship"
-                ],
-                correctAnswer: [2, 3]
-            },
-            {
-                question: "What is the capital of India?",
-                options: [
-                    "Option A: Delhi",
-                    "Option B: Mumbai",
-                    "Option C: Kolkata",
-                    "Option D: Chennai"
-                ],
-                correctAnswer: [0]
-            }
-        ];
-        
-        let currentQuestionIndex = 0;
-        let userName = '';
-        
-        function startQuiz() {
-            userName = document.getElementById('name').value;
-            if (userName.trim() === "") {
-                alert("Please enter your name.");
-                return;
-            }
-            document.getElementById('username').innerText = userName;
-            document.getElementById('name-input').style.display = 'none';
-            document.getElementById('quiz').style.display = 'block';
-            showQuestion();
+<script>
+    let questions = [
+        {
+            question: "Rate your friendship on a scale of 1-10",
+            options: [
+                "Option A: 5",
+                "Option B: 7",
+                "Option C: 10",
+                "Option D: Can't rate friendship"
+            ],
+            correctAnswer: [2, 3]  // Option C and D are correct
+        },
+        {
+            question: "What is the capital of India?",
+            options: [
+                "Option A: Delhi",
+                "Option B: Mumbai",
+                "Option C: Kolkata",
+                "Option D: Chennai"
+            ],
+            correctAnswer: [0]  // Option A is correct
+        },
+        {
+            question: "Who is known as the Father of the Nation?",
+            options: [
+                "Option A: Jawaharlal Nehru",
+                "Option B: Mahatma Gandhi",
+                "Option C: Sardar Patel",
+                "Option D: Subhash Chandra Bose"
+            ],
+            correctAnswer: [1]  // Option B is correct
+        },
+        {
+            question: "What is the largest state in India by area?",
+            options: [
+                "Option A: Uttar Pradesh",
+                "Option B: Madhya Pradesh",
+                "Option C: Rajasthan",
+                "Option D: Maharashtra"
+            ],
+            correctAnswer: [2]  // Option C is correct
+        },
+        {
+            question: "What is the national flower of India?",
+            options: [
+                "Option A: Rose",
+                "Option B: Lotus",
+                "Option C: Jasmine",
+                "Option D: Sunflower"
+            ],
+            correctAnswer: [1]  // Option B is correct
         }
-
-        function showQuestion() {
-            let question = questions[currentQuestionIndex];
-            document.querySelector('.question').textContent = question.question;
-            let optionsDiv = document.querySelector('.options');
-            optionsDiv.innerHTML = '';
-            
-            question.options.forEach((option, index) => {
-                let optionElement = document.createElement('div');
-                optionElement.innerHTML = `
-                    <input type="checkbox" id="option${index}">
-                    <label for="option${index}">${option}</label>
-                `;
-                optionsDiv.appendChild(optionElement);
-            });
+    ];
+    let currentQuestionIndex = 0;
+    let userName = '';
+    
+    function startQuiz() {
+        userName = document.getElementById('name').value;
+        if (userName.trim() === "") {
+            alert("Please enter your name.");
+            return;
         }
+        document.getElementById('username').innerText = userName;
+        document.getElementById('name-input').style.display = 'none';
+        document.getElementById('quiz').style.display = 'block';
+        showQuestion();
+    }
 
-        function nextQuestion() {
-            let question = questions[currentQuestionIndex];
-            let selectedOptions = [];
-            question.options.forEach((_, index) => {
-                if (document.getElementById(`option${index}`).checked) {
-                    selectedOptions.push(index);
-                }
-            });
+    function showQuestion() {
+        let question = questions[currentQuestionIndex];
+        document.querySelector('.question').textContent = question.question;
+        let optionsDiv = document.querySelector('.options');
+        optionsDiv.innerHTML = '';
+        
+        question.options.forEach((option, index) => {
+            let optionElement = document.createElement('div');
+            optionElement.innerHTML = `
+                <input type="checkbox" id="option${index}" />
+                <label for="option${index}">${option}</label>
+            `;
+            optionsDiv.appendChild(optionElement);
+        });
+    }
 
-            let isCorrect = selectedOptions.every(option => question.correctAnswer.includes(option));
-            
-            if (isCorrect) {
-                alert("Correct answer! Moving to next question.");
-                currentQuestionIndex++;
-                if (currentQuestionIndex < questions.length) {
-                    showQuestion();
-                } else {
-                    endQuiz();
-                }
+    function nextQuestion() {
+        let question = questions[currentQuestionIndex];
+        let selectedOptions = [];
+        question.options.forEach((option, index) => {
+            if (document.getElementById(`option${index}`).checked) {
+                selectedOptions.push(index);
+            }
+        });
+
+        let isCorrect = selectedOptions.every(option => question.correctAnswer.includes(option));
+        
+        if (isCorrect) {
+            alert("Correct answer! Moving to next question.");
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
             } else {
-                alert("Incorrect answer! Try again.");
+                endQuiz();
             }
+        } else {
+            alert("Incorrect answer! Try again.");
         }
+    }
 
-        function endQuiz() {
-            document.getElementById('quiz').style.display = 'none';
-            document.getElementById('thank-you').style.display = 'block';
-        }
-    </script>
+    function endQuiz() {
+        document.getElementById('quiz').style.display = 'none';
+        document.getElementById('thank-you').style.display = 'block';
+    }
+</script>
+
 </body>
 </html>
