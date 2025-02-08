@@ -20,15 +20,18 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 300px;
+            text-align: left;
+            width: 350px;
         }
         .question {
             font-size: 20px;
             margin-bottom: 10px;
         }
-        .options input {
-            margin: 10px 0;
+        .options {
+            text-align: left;
+        }
+        .options div {
+            margin: 5px 0;
         }
         button {
             padding: 10px 20px;
@@ -37,6 +40,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -100,24 +104,6 @@
             options: ["USA", "Russia", "China", "India"],
             correctAnswer: [2],
             hint: "This country has a space program named CNSA."
-        },
-        {
-            question: "Who is the current Chief Minister of Maharashtra?",
-            options: ["Uddhav Thackeray", "Devendra Fadnavis", "Eknath Shinde", "Sharad Pawar"],
-            correctAnswer: [2],
-            hint: "He took office in 2022."
-        },
-        {
-            question: "What is the name of the new budget announced by the Indian government?",
-            options: ["Union Budget 2025", "Growth Budget 2025", "Atmanirbhar Budget", "Viksit Bharat Budget"],
-            correctAnswer: [3],
-            hint: "The budget aligns with India's 2047 development vision."
-        },
-        {
-            question: "Which country recently joined BRICS?",
-            options: ["Argentina", "Saudi Arabia", "Indonesia", "Mexico"],
-            correctAnswer: [1],
-            hint: "This country is one of the world's largest oil producers."
         }
     ];
     let currentQuestionIndex = 0;
@@ -174,17 +160,25 @@
             resultText.textContent = "Correct answer!";
             resultText.classList.add("correct");
             resultText.classList.remove("incorrect");
+            setTimeout(() => {
+                moveToNext();
+            }, 1000);
         } else {
-            resultText.textContent = "Incorrect answer! Try again.";
+            resultText.textContent = `Incorrect! Correct answer: ${question.options[question.correctAnswer[0]]}`;
             resultText.classList.add("incorrect");
             resultText.classList.remove("correct");
+            setTimeout(() => {
+                moveToNext();
+            }, 5000);
         }
+    }
 
+    function moveToNext() {
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.length) {
-            setTimeout(showQuestion, 1000);
+            showQuestion();
         } else {
-            setTimeout(endQuiz, 1000);
+            endQuiz();
         }
     }
 
