@@ -56,10 +56,12 @@
             font-size: 18px;
             margin-top: 10px;
             font-weight: bold;
-            color: #d9534f;
         }
         .correct {
             color: #28a745;
+        }
+        .incorrect {
+            color: #d9534f;
         }
     </style>
 </head>
@@ -86,6 +88,38 @@
 </div>
 
 <script>
+    let questions = [
+        {
+            question: "Who won the ICC U19 Cricket World Cup 2025?",
+            options: ["India", "Australia", "England", "South Africa"],
+            correctAnswer: [0],
+            hint: "The team has won the most U19 titles in history."
+        },
+        {
+            question: "Which country recently landed on the Moon's far side?",
+            options: ["USA", "Russia", "China", "India"],
+            correctAnswer: [2],
+            hint: "This country has a space program named CNSA."
+        },
+        {
+            question: "Who is the current Chief Minister of Maharashtra?",
+            options: ["Uddhav Thackeray", "Devendra Fadnavis", "Eknath Shinde", "Sharad Pawar"],
+            correctAnswer: [2],
+            hint: "He took office in 2022."
+        },
+        {
+            question: "What is the name of the new budget announced by the Indian government?",
+            options: ["Union Budget 2025", "Growth Budget 2025", "Atmanirbhar Budget", "Viksit Bharat Budget"],
+            correctAnswer: [3],
+            hint: "The budget aligns with India's 2047 development vision."
+        },
+        {
+            question: "Which country recently joined BRICS?",
+            options: ["Argentina", "Saudi Arabia", "Indonesia", "Mexico"],
+            correctAnswer: [1],
+            hint: "This country is one of the world's largest oil producers."
+        }
+    ];
     let currentQuestionIndex = 0;
     let userName = '';
 
@@ -128,7 +162,7 @@
         let selectedOption = document.querySelector('input[name="option"]:checked');
         if (!selectedOption) {
             document.getElementById('result').textContent = "Please select an option.";
-            document.getElementById('result').classList.remove("correct");
+            document.getElementById('result').classList.remove("correct", "incorrect");
             return;
         }
 
@@ -142,6 +176,7 @@
             resultText.classList.remove("incorrect");
         } else {
             resultText.textContent = "Incorrect answer! Try again.";
+            resultText.classList.add("incorrect");
             resultText.classList.remove("correct");
         }
 
