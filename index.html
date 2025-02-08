@@ -7,8 +7,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/India_Globe.svg/1024px-India_Globe.svg.png') no-repeat center center fixed;
-            background-size: cover;
+            background-color: white;
             margin: 0;
             padding: 0;
             display: flex;
@@ -53,6 +52,15 @@
             color: #333;
             font-style: italic;
         }
+        #result {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+        .correct {
+            color: #28a745;
+        }
     </style>
 </head>
 <body>
@@ -68,6 +76,7 @@
         <div class="options"></div>
         <button onclick="showHint()">Hint</button>
         <p id="hint"></p>
+        <p id="result"></p>
         <button onclick="nextQuestion()">Next Question</button>
     </div>
     <div id="thank-you">
@@ -77,66 +86,9 @@
 </div>
 
 <script>
-    let questions = [
-        {
-            question: "Which team is England facing in the second ODI on February 9, 2025?",
-            options: [
-                "Option A: Australia",
-                "Option B: South Africa",
-                "Option C: India",
-                "Option D: New Zealand"
-            ],
-            correctAnswer: [2],
-            hint: "The match is taking place at the Barabati Stadium in Cuttack."
-        },
-        {
-            question: "What significant change was announced in the 2025 Union Budget regarding income tax?",
-            options: [
-                "Option A: Introduction of a new wealth tax",
-                "Option B: Zero income tax up to ₹12 lakh",
-                "Option C: Increase in corporate tax rates",
-                "Option D: Reduction in GST rates"
-            ],
-            correctAnswer: [1],
-            hint: "The change benefits individuals earning up to ₹12 lakh annually."
-        },
-        {
-            question: "Which political party won the 2025 Delhi Assembly elections?",
-            options: [
-                "Option A: Aam Aadmi Party (AAP)",
-                "Option B: Indian National Congress",
-                "Option C: Bharatiya Janata Party (BJP)",
-                "Option D: Bahujan Samaj Party (BSP)"
-            ],
-            correctAnswer: [2],
-            hint: "The winning party is led by Prime Minister Narendra Modi."
-        },
-        {
-            question: "Which Indian city is hosting the Maha Kumbh Mela from January 13 to February 26, 2025?",
-            options: [
-                "Option A: Haridwar",
-                "Option B: Prayagraj",
-                "Option C: Varanasi",
-                "Option D: Ujjain"
-            ],
-            correctAnswer: [1],
-            hint: "This city was formerly known as Allahabad."
-        },
-        {
-            question: "What is the new tax exemption limit for senior citizens' interest income as per the 2025 Union Budget?",
-            options: [
-                "Option A: ₹50,000",
-                "Option B: ₹1 lakh",
-                "Option C: ₹1.5 lakh",
-                "Option D: ₹2 lakh"
-            ],
-            correctAnswer: [1],
-            hint: "The limit has been doubled from the previous ₹50,000."
-        }
-    ];
     let currentQuestionIndex = 0;
     let userName = '';
-    
+
     function startQuiz() {
         userName = document.getElementById('name').value;
         if (userName.trim() === "") {
@@ -153,13 +105,14 @@
         let question = questions[currentQuestionIndex];
         document.querySelector('.question').textContent = question.question;
         document.getElementById('hint').style.display = 'none';
+        document.getElementById('result').textContent = '';
         let optionsDiv = document.querySelector('.options');
         optionsDiv.innerHTML = '';
-        
+
         question.options.forEach((option, index) => {
             let optionElement = document.createElement('div');
             optionElement.innerHTML = `
-                <input type="checkbox" id="option${index}" />
+                <input type="radio" name="option" id="option${index}" value="${index}" />
                 <label for="option${index}">${option}</label>
             `;
             optionsDiv.appendChild(optionElement);
@@ -172,30 +125,39 @@
     }
 
     function nextQuestion() {
-        let question = questions[currentQuestionIndex];
-        let selectedOptions = [];
-        question.options.forEach((option, index) => {
-            if (document.getElementById(`option${index}`).checked) {
-                selectedOptions.push(index);
-            }
-        });
+        let selectedOption = document.querySelector('input[name="option"]:checked');
+        if (!selectedOption) {
+            document.getElementById('result').textContent = "Please select an option.";
+            document.getElementById('result').classList.remove("correct");
+            return;
+        }
 
-        let isCorrect = selectedOptions.every(option => question.correctAnswer.includes(option));
-        
-        if (isCorrect) {
-            alert("Correct answer! Moving to next question.");
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                showQuestion();
-            } else {
-                endQuiz();
-            }
+        let selectedIndex = parseInt(selectedOption.value);
+        let question = questions[currentQuestionIndex];
+        let resultText = document.getElementById('result');
+
+        if (question.correctAnswer.includes(selectedIndex)) {
+            resultText.textContent = "Correct answer!";
+            resultText.classList.add("correct");
+            resultText.classList.remove("incorrect");
         } else {
-            alert("Incorrect answer! Try again.");
+            resultText.textContent = "Incorrect answer! Try again.";
+            resultText.classList.remove("correct");
+        }
+
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            setTimeout(showQuestion, 1000);
+        } else {
+            setTimeout(endQuiz, 1000);
         }
     }
 
     function endQuiz() {
-        document.getElementById
-::contentReference[oaicite:0]{index=0}
- 
+        document.getElementById('quiz').style.display = 'none';
+        document.getElementById('thank-you').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
