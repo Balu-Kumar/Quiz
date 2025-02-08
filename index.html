@@ -5,16 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Current Affairs Quiz</title>
     <style>
+        @keyframes moveMap {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: white;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .moving-map {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            opacity: 0.2;
+            animation: moveMap 5s infinite;
+        }
+
         .quiz-container {
             background: rgba(255, 255, 255, 0.9);
             padding: 20px;
@@ -22,6 +41,8 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             text-align: left;
             width: 350px;
+            position: relative;
+            z-index: 2;
         }
         .question {
             font-size: 20px;
@@ -71,6 +92,8 @@
 </head>
 <body>
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Flag_of_India.svg/512px-Flag_of_India.svg.png" class="moving-map" alt="India Map">
+
 <div class="quiz-container">
     <div id="name-input">
         <h2>Enter your name:</h2>
@@ -104,6 +127,24 @@
             options: ["USA", "Russia", "China", "India"],
             correctAnswer: [2],
             hint: "This country has a space program named CNSA."
+        },
+        {
+            question: "Which tech company announced a major AI breakthrough on Feb 8, 2025?",
+            options: ["Google", "Microsoft", "OpenAI", "Amazon"],
+            correctAnswer: [2],
+            hint: "The company is known for ChatGPT."
+        },
+        {
+            question: "Who won the 2025 Grammy Award for Album of the Year?",
+            options: ["Taylor Swift", "Billie Eilish", "Drake", "Adele"],
+            correctAnswer: [0],
+            hint: "The artist has won multiple Album of the Year awards."
+        },
+        {
+            question: "What major political event happened in India on Feb 8, 2025?",
+            options: ["General Elections", "Union Budget Announcement", "New PM Sworn In", "India Joined G7"],
+            correctAnswer: [1],
+            hint: "This event decides the country's economic policies."
         }
     ];
     let currentQuestionIndex = 0;
@@ -137,54 +178,6 @@
             `;
             optionsDiv.appendChild(optionElement);
         });
-    }
-
-    function showHint() {
-        document.getElementById('hint').innerText = questions[currentQuestionIndex].hint;
-        document.getElementById('hint').style.display = 'block';
-    }
-
-    function nextQuestion() {
-        let selectedOption = document.querySelector('input[name="option"]:checked');
-        if (!selectedOption) {
-            document.getElementById('result').textContent = "Please select an option.";
-            document.getElementById('result').classList.remove("correct", "incorrect");
-            return;
-        }
-
-        let selectedIndex = parseInt(selectedOption.value);
-        let question = questions[currentQuestionIndex];
-        let resultText = document.getElementById('result');
-
-        if (question.correctAnswer.includes(selectedIndex)) {
-            resultText.textContent = "Correct answer!";
-            resultText.classList.add("correct");
-            resultText.classList.remove("incorrect");
-            setTimeout(() => {
-                moveToNext();
-            }, 1000);
-        } else {
-            resultText.textContent = `Incorrect! Correct answer: ${question.options[question.correctAnswer[0]]}`;
-            resultText.classList.add("incorrect");
-            resultText.classList.remove("correct");
-            setTimeout(() => {
-                moveToNext();
-            }, 5000);
-        }
-    }
-
-    function moveToNext() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-            showQuestion();
-        } else {
-            endQuiz();
-        }
-    }
-
-    function endQuiz() {
-        document.getElementById('quiz').style.display = 'none';
-        document.getElementById('thank-you').style.display = 'block';
     }
 </script>
 
