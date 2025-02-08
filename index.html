@@ -3,184 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GK Quiz Login</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>Quiz</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            background: url('https://source.unsplash.com/1600x900/?success,motivation') no-repeat center center/cover;
-            user-select: none;
-            transition: background 0.5s ease;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/India_Globe.svg/1024px-India_Globe.svg.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        .dark-mode {
-            background: #121212 !important;
-            color: white !important;
-        }
-        .login-container {
-            background: rgba(0, 0, 0, 0.7);
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 10px;
-            color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 300px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
         }
-        input, button { 
-            width: 90%; 
-            padding: 10px; 
-            margin: 10px 0; 
-            border: none; 
-            border-radius: 5px; 
-            text-align: center;
+        .question {
+            font-size: 20px;
+            margin-bottom: 10px;
         }
-        button { 
-            background: #ff5722; 
-            color: white; 
-            cursor: pointer; 
+        .options input {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         button:hover {
-            background: #e64a19;
+            background-color: #45a049;
         }
-        .footer {
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-            text-align: center;
-            color: white;
+        #thank-you {
+            display: none;
+            font-size: 24px;
         }
-        .footer a {
-            color: #ffcc00;
-            text-decoration: none;
-        }
-        .dark-mode-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            background: white;
-            color: black;
-            padding: 5px;
-            border-radius: 5px;
-        }
-        input, button {
+        #hint {
+            display: none;
             font-size: 16px;
+            margin-top: 10px;
+            color: #333;
+            font-style: italic;
         }
     </style>
-    <script>
-        document.addEventListener("contextmenu", function(event) {
-            event.preventDefault();
-        });
-        document.addEventListener("keydown", function(event) {
-            if (event.ctrlKey && (event.key === "u" || event.key === "c" || event.key === "v" || event.key === "p")) {
-                event.preventDefault();
-            }
-        });
-
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-        }
-
-        function updateFormAccessibility() {
-            const phoneNumberInput = document.getElementById("phoneNumber");
-            phoneNumberInput.setAttribute("aria-label", "Enter Mobile Number");
-
-            const sendOTPButton = document.getElementById("sendOTPButton");
-            sendOTPButton.setAttribute("aria-pressed", "false");
-
-            const otpCodeInput = document.getElementById("otpCode");
-            otpCodeInput.setAttribute("aria-label", "Enter OTP");
-
-            const verifyOTPButton = document.querySelector("#otp-section button");
-            verifyOTPButton.setAttribute("aria-pressed", "false");
-        }
-
-        document.addEventListener("DOMContentLoaded", updateFormAccessibility);
-    </script>
 </head>
 <body>
-    <div class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</div>
-    <div class="login-container">
-        <h2>Student Login</h2>
-        <p>Enter your mobile number to receive an OTP</p>
-        <form id="login-form" aria-labelledby="login-form-title">
-            <input type="tel" id="phoneNumber" placeholder="Enter Mobile Number" required><br>
-            <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" aria-label="reCAPTCHA"></div><br>
-            <button type="button" id="sendOTPButton" onclick="sendOTP()" aria-label="Send OTP">Send OTP</button>
-        </form>
-        <div id="otp-section" style="display: none;">
-            <p>Enter the OTP sent to your mobile</p>
-            <input type="text" id="otpCode" placeholder="Enter OTP" required><br>
-            <button type="button" onclick="verifyOTP()" aria-label="Verify OTP">Verify OTP</button>
-        </div>
+
+<div class="quiz-container">
+    <div id="name-input">
+        <h2>Enter your name:</h2>
+        <input type="text" id="name" placeholder="Your Name" />
+        <button onclick="startQuiz()">Start Quiz</button>
     </div>
-
-    <div class="footer">
-        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Use</a>
+    <div id="quiz" style="display:none;">
+        <h2 class="question"></h2>
+        <div class="options"></div>
+        <button onclick="showHint()">Hint</button>
+        <p id="hint"></p>
+        <button onclick="nextQuestion()">Next Question</button>
     </div>
+    <div id="thank-you">
+        <h2>Thank you, <span id="username"></span>!</h2>
+        <p>Your participation was appreciated!</p>
+    </div>
+</div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        let otpCooldown = false;
-
-        function sendOTP() {
-            if (otpCooldown) {
-                alert("Please wait before requesting another OTP.");
-                return;
-            }
-            let phoneNumber = document.getElementById("phoneNumber").value;
-            let recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                alert("Please complete the reCAPTCHA challenge.");
-                return;
-            }
-            let recaptchaVerifier = new firebase.auth.RecaptchaVerifier('login-form');
-            auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
-                .then((confirmationResult) => {
-                    window.confirmationResult = confirmationResult;
-                    document.getElementById("otp-section").style.display = "block";
-                    otpCooldown = true;
-                    setTimeout(() => { otpCooldown = false; }, 60000);
-                })
-                .catch((error) => {
-                    alert("Error sending OTP: " + error.message);
-                });
+<script>
+    let questions = [
+        {
+            question: "Rate your friendship on a scale of 1-10",
+            options: [
+                "Option A: 5",
+                "Option B: 7",
+                "Option C: 10",
+                "Option D: Can't rate friendship"
+            ],
+            correctAnswer: [2],
+            hint: "Think about the best possible rating you could give a best friend!"
+        },
+        {
+            question: "What is the capital of India?",
+            options: [
+                "Option A: Delhi",
+                "Option B: Mumbai",
+                "Option C: Kolkata",
+                "Option D: Chennai"
+            ],
+            correctAnswer: [0],
+            hint: "It's where the President of India resides."
+        },
+        {
+            question: "Who is known as the Father of the Nation?",
+            options: [
+                "Option A: Jawaharlal Nehru",
+                "Option B: Mahatma Gandhi",
+                "Option C: Sardar Patel",
+                "Option D: Subhash Chandra Bose"
+            ],
+            correctAnswer: [1],
+            hint: "He led India's non-violent independence movement."
+        },
+        {
+            question: "What is the largest state in India by area?",
+            options: [
+                "Option A: Uttar Pradesh",
+                "Option B: Madhya Pradesh",
+                "Option C: Rajasthan",
+                "Option D: Maharashtra"
+            ],
+            correctAnswer: [2],
+            hint: "It is home to the Thar Desert."
+        },
+        {
+            question: "What is the national flower of India?",
+            options: [
+                "Option A: Rose",
+                "Option B: Lotus",
+                "Option C: Jasmine",
+                "Option D: Sunflower"
+            ],
+            correctAnswer: [1],
+            hint: "This flower is often associated with purity and spirituality."
         }
-
-        function verifyOTP() {
-            let otpCode = document.getElementById("otpCode").value;
-            confirmationResult.confirm(otpCode)
-                .then((result) => {
-                    let user = result.user;
-                    db.collection("users").doc(user.uid).set({
-                        phoneNumber: user.phoneNumber,
-                        createdAt: new Date()
-                    });
-                    alert("Login successful!");
-                    window.location.href = "quiz.html";
-                })
-                .catch((error) => {
-                    alert("Invalid OTP, try again.");
-                });
+    ];
+    let currentQuestionIndex = 0;
+    let userName = '';
+    
+    function startQuiz() {
+        userName = document.getElementById('name').value;
+        if (userName.trim() === "") {
+            alert("Please enter your name.");
+            return;
         }
-    </script>
+        document.getElementById('username').innerText = userName;
+        document.getElementById('name-input').style.display = 'none';
+        document.getElementById('quiz').style.display = 'block';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        let question = questions[currentQuestionIndex];
+        document.querySelector('.question').textContent = question.question;
+        document.getElementById('hint').style.display = 'none';
+        let optionsDiv = document.querySelector('.options');
+        optionsDiv.innerHTML = '';
+        
+        question.options.forEach((option, index) => {
+            let optionElement = document.createElement('div');
+            optionElement.innerHTML = `
+                <input type="checkbox" id="option${index}" />
+                <label for="option${index}">${option}</label>
+            `;
+            optionsDiv.appendChild(optionElement);
+        });
+    }
+
+    function showHint() {
+        document.getElementById('hint').innerText = questions[currentQuestionIndex].hint;
+        document.getElementById('hint').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        let question = questions[currentQuestionIndex];
+        let selectedOptions = [];
+        question.options.forEach((option, index) => {
+            if (document.getElementById(`option${index}`).checked) {
+                selectedOptions.push(index);
+            }
+        });
+
+        let isCorrect = selectedOptions.every(option => question.correctAnswer.includes(option));
+        
+        if (isCorrect) {
+            alert("Correct answer! Moving to next question.");
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                endQuiz();
+            }
+        } else {
+            alert("Incorrect answer! Try again.");
+        }
+    }
+
+    function endQuiz() {
+        document.getElementById('quiz').style.display = 'none';
+        document.getElementById('thank-you').style.display = 'block';
+    }
+</script>
+
 </body>
 </html>
