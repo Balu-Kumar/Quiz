@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Current Affairs Quiz</title>
     <style>
-        @keyframes moveMap {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0); }
+        @keyframes backgroundChange {
+            0% { background: #ff9966; }
+            25% { background: #ff5e62; }
+            50% { background: #ffcc66; }
+            75% { background: #66ccff; }
+            100% { background: #ff9966; }
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to right, #ff9966, #ff5e62);
+            animation: backgroundChange 10s infinite linear;
             margin: 0;
             padding: 0;
             display: flex;
@@ -22,16 +24,6 @@
             height: 100vh;
             position: relative;
             overflow: hidden;
-        }
-        
-        .moving-map {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            opacity: 0.2;
-            animation: moveMap 5s infinite;
         }
 
         .quiz-container {
@@ -91,8 +83,6 @@
     </style>
 </head>
 <body>
-
-<img src="https://www.mapsofindia.com/maps/india/india-flag.jpg" class="moving-map" alt="India Map">
 
 <div class="quiz-container">
     <div id="name-input">
