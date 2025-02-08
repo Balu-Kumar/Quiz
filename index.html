@@ -92,7 +92,7 @@
 </head>
 <body>
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Flag_of_India.svg/512px-Flag_of_India.svg.png" class="moving-map" alt="India Map">
+<img src="https://www.mapsofindia.com/maps/india/india-flag.jpg" class="moving-map" alt="India Map">
 
 <div class="quiz-container">
     <div id="name-input">
@@ -147,38 +147,6 @@
             hint: "This event decides the country's economic policies."
         }
     ];
-    let currentQuestionIndex = 0;
-    let userName = '';
-
-    function startQuiz() {
-        userName = document.getElementById('name').value;
-        if (userName.trim() === "") {
-            alert("Please enter your name.");
-            return;
-        }
-        document.getElementById('username').innerText = userName;
-        document.getElementById('name-input').style.display = 'none';
-        document.getElementById('quiz').style.display = 'block';
-        showQuestion();
-    }
-
-    function showQuestion() {
-        let question = questions[currentQuestionIndex];
-        document.querySelector('.question').textContent = question.question;
-        document.getElementById('hint').style.display = 'none';
-        document.getElementById('result').textContent = '';
-        let optionsDiv = document.querySelector('.options');
-        optionsDiv.innerHTML = '';
-
-        question.options.forEach((option, index) => {
-            let optionElement = document.createElement('div');
-            optionElement.innerHTML = `
-                <input type="radio" name="option" id="option${index}" value="${index}" />
-                <label for="option${index}">${option}</label>
-            `;
-            optionsDiv.appendChild(optionElement);
-        });
-    }
 </script>
 
 </body>
