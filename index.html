@@ -6,8 +6,9 @@
     <title>Quiz</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: lightblue;
+            font-family: 'Poppins', sans-serif;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/India_Globe.svg/1024px-India_Globe.svg.png') no-repeat center center fixed;
+            background-size: cover;
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,7 +17,7 @@
             height: 100vh;
         }
         .quiz-container {
-            background-color: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -45,6 +46,13 @@
             display: none;
             font-size: 24px;
         }
+        #hint {
+            display: none;
+            font-size: 16px;
+            margin-top: 10px;
+            color: #333;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -58,6 +66,8 @@
     <div id="quiz" style="display:none;">
         <h2 class="question"></h2>
         <div class="options"></div>
+        <button onclick="showHint()">Hint</button>
+        <p id="hint"></p>
         <button onclick="nextQuestion()">Next Question</button>
     </div>
     <div id="thank-you">
@@ -76,7 +86,8 @@
                 "Option C: 10",
                 "Option D: Can't rate friendship"
             ],
-            correctAnswer: [2, 3]  // Option C and D are correct
+            correctAnswer: [2],
+            hint: "Think about the best possible rating you could give a best friend!"
         },
         {
             question: "What is the capital of India?",
@@ -86,7 +97,8 @@
                 "Option C: Kolkata",
                 "Option D: Chennai"
             ],
-            correctAnswer: [0]  // Option A is correct
+            correctAnswer: [0],
+            hint: "It's where the President of India resides."
         },
         {
             question: "Who is known as the Father of the Nation?",
@@ -96,7 +108,8 @@
                 "Option C: Sardar Patel",
                 "Option D: Subhash Chandra Bose"
             ],
-            correctAnswer: [1]  // Option B is correct
+            correctAnswer: [1],
+            hint: "He led India's non-violent independence movement."
         },
         {
             question: "What is the largest state in India by area?",
@@ -106,7 +119,8 @@
                 "Option C: Rajasthan",
                 "Option D: Maharashtra"
             ],
-            correctAnswer: [2]  // Option C is correct
+            correctAnswer: [2],
+            hint: "It is home to the Thar Desert."
         },
         {
             question: "What is the national flower of India?",
@@ -116,7 +130,8 @@
                 "Option C: Jasmine",
                 "Option D: Sunflower"
             ],
-            correctAnswer: [1]  // Option B is correct
+            correctAnswer: [1],
+            hint: "This flower is often associated with purity and spirituality."
         }
     ];
     let currentQuestionIndex = 0;
@@ -137,6 +152,7 @@
     function showQuestion() {
         let question = questions[currentQuestionIndex];
         document.querySelector('.question').textContent = question.question;
+        document.getElementById('hint').style.display = 'none';
         let optionsDiv = document.querySelector('.options');
         optionsDiv.innerHTML = '';
         
@@ -148,6 +164,11 @@
             `;
             optionsDiv.appendChild(optionElement);
         });
+    }
+
+    function showHint() {
+        document.getElementById('hint').innerText = questions[currentQuestionIndex].hint;
+        document.getElementById('hint').style.display = 'block';
     }
 
     function nextQuestion() {
